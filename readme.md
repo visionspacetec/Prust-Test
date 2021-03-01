@@ -1,4 +1,13 @@
 # Test Tools
+Available commands
+```
+cargo run list_ports
+```
+and 
+```
+cargo run
+```
+To see how ```cargo run``` works check the wiki page [here](https://github.com/visionspacetec/Prust/wiki/How-to-Use-the-Client-Crate).
 
 ## Setup
 For GNU Linux pkg-config headers are required:
