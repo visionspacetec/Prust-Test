@@ -7,7 +7,7 @@ and
 ```
 cargo run
 ```
-To see how ```cargo run``` works check the wiki page [here](https://github.com/visionspacetec/Prust/wiki/How-to-Use-the-Client-Crate).
+To see how ```cargo run``` works check the wiki page [here](https://github.com/visionspacetec/Prust/wiki/How-to-Use-the-Prust-Test).
 
 ## Setup
 For GNU Linux pkg-config headers are required:
