@@ -1,7 +1,7 @@
 // From https://github.com/Susurrus/serialport-rs/blob/master/examples/list_ports.rs
 use serialport::{available_ports, SerialPortType};
 
-pub fn list_ports(){
+pub fn list_ports() -> usize{
     match available_ports() {
         Ok(ports) => {
             match ports.len() {
@@ -38,11 +38,14 @@ pub fn list_ports(){
                         println!("    Type: Unknown");
                     }
                 }
+                
             }
+            ports.len()
         }
         Err(e) => {
             eprintln!("{:?}", e);
             eprintln!("Error listing serial ports");
+            0
         }
     }
 }

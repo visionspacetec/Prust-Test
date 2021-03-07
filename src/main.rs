@@ -1,6 +1,6 @@
 extern crate serialport;
 use byteorder::{BigEndian, ByteOrder};
-use pus::sp::{services, SpacePacket};
+use prust_core::sp::{services, SpacePacket};
 use serialport::prelude::*;
 use serialport::{available_ports, open_with_settings, SerialPortSettings};
 use std::string::String;
@@ -16,7 +16,7 @@ use rustyline::Editor;
 use utils::list_ports;
 use text_io::scan;
 
-const ERROR_NAMES: [&str; pus::error::ERR_CODE_COUNT] = [
+const ERROR_NAMES: [&str; prust_core::error::ERR_CODE_COUNT] = [
     "UnsupportedRequest",
     "InvalidPacket",
     "CorruptData",
@@ -97,7 +97,9 @@ fn main() {
     rl.set_auto_add_history(true);
 
     print!("Please specify device index: ");
-    list_ports();
+    if list_ports() == 0{
+        return;
+    };
     let idx:usize;
     scan!("{}", idx);
     // Etablishing serial connetion
@@ -144,7 +146,7 @@ fn main() {
             if clone.read_exact(&mut buf[0..6]).is_err() {
                 continue;
             };
-            let ph = match pus::sp::PrimaryHeader::from_bytes(&buf[0..6]) {
+            let ph = match prust_core::sp::PrimaryHeader::from_bytes(&buf[0..6]) {
                 Ok(p) => p,
                 Err(_) => {
                     continue;
@@ -157,21 +159,21 @@ fn main() {
                 continue;
             }
             let data_len = data_len + 6;
-            let ser_type = match pus::sp::get_service_type(&buf[0..data_len]) {
+            let ser_type = match prust_core::sp::get_service_type(&buf[0..data_len]) {
                 Ok(res) => res,
                 _ => continue,
             };
             if ser_type == (1, 7) {
                 writeln!(file, "TM SUCCESS RESPONSE").unwrap();
                 let res_pack = SpacePacket::<
-                    pus::sp::tm::TmPacket<services::service_1::ServiceSuccess>,
+                    prust_core::sp::tm::TmPacket<services::service_1::ServiceSuccess>,
                 >::from_bytes(&buf[0..data_len])
                 .unwrap();
                 writeln!(file, "TM pack:\n{:#?}", res_pack).unwrap();
             } else if ser_type == (1, 8) {
                 writeln!(file, "TM FAILURE RESPONSE").unwrap();
                 let res_pack =
-                SpacePacket::<pus::sp::tm::TmPacket<services::service_1::Service1_8>>::from_bytes(&buf[0..data_len]).unwrap();
+                SpacePacket::<prust_core::sp::tm::TmPacket<services::service_1::Service1_8>>::from_bytes(&buf[0..data_len]).unwrap();
                 let (code, data) = res_pack.get_err();
                 writeln!(file, "TM pack:\n{:#?}", res_pack).unwrap();
                 writeln!(
@@ -184,7 +186,7 @@ fn main() {
             } else if ser_type == (3, 25) {
                 writeln!(file,"Tm Parameter Response").unwrap();
                 let res_pack = SpacePacket::<
-                    pus::sp::tm::TmPacket<services::service_3::service_3_25::Service3_25>,
+                    prust_core::sp::tm::TmPacket<services::service_3::service_3_25::Service3_25>,
                 >::from_bytes(&buf[0..data_len])
                 .unwrap();
                 writeln!(file, "TM pack:\n{:#?}", res_pack).unwrap();
