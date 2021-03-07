@@ -11,15 +11,12 @@ default-run="prust_test"
 name = "utils"
 path = "src/utils.rs"
 
-
-
 [[bin]]
 name = "list_ports"
 path = "src/list_ports.rs"
 
 [target.'cfg(unix)'.dependencies]
 libudev = "0.2.0"
-
 
 
 [dependencies]
