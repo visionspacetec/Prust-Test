@@ -1,7 +1,7 @@
 // From https://github.com/Susurrus/serialport-rs/blob/master/examples/list_ports.rs
 use serialport::{available_ports, SerialPortType};
 
-pub fn list_ports() -> usize{
+pub fn list_ports() -> usize {
     match available_ports() {
         Ok(ports) => {
             match ports.len() {
@@ -9,7 +9,7 @@ pub fn list_ports() -> usize{
                 1 => println!("Found 1 port:"),
                 n => println!("Found {} ports:", n),
             };
-            for (i,p) in ports.iter().enumerate() {
+            for (i, p) in ports.iter().enumerate() {
                 println!("  {}, INDEX={}", p.port_name, i);
                 match &p.port_type {
                     SerialPortType::UsbPort(info) => {
@@ -38,7 +38,6 @@ pub fn list_ports() -> usize{
                         println!("    Type: Unknown");
                     }
                 }
-                
             }
             ports.len()
         }
@@ -49,4 +48,3 @@ pub fn list_ports() -> usize{
         }
     }
 }
-

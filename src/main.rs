@@ -8,13 +8,13 @@ use std::thread;
 use std::time::Duration;
 extern crate clap;
 use clap::{App, AppSettings, Arg, SubCommand};
+use rustyline::Editor;
+use rustyline::{config::Configurer, error::ReadlineError};
 use std::fs::File;
 use std::io::prelude::*;
 use std::path::Path;
-use rustyline::{config::Configurer, error::ReadlineError};
-use rustyline::Editor;
-use utils::list_ports;
 use text_io::scan;
+use utils::list_ports;
 
 const ERROR_NAMES: [&str; prust_core::error::ERR_CODE_COUNT] = [
     "UnsupportedRequest",
@@ -33,20 +33,21 @@ const ERROR_NAMES: [&str; prust_core::error::ERR_CODE_COUNT] = [
 ];
 fn main() {
     // CLI Setup
-    let app = App::new("tc").global_setting(AppSettings::NoBinaryName)
-        .subcommand(
-            SubCommand::with_name("q").about("quit")
-        )
+    let app = App::new("tc")
+        .global_setting(AppSettings::NoBinaryName)
+        .subcommand(SubCommand::with_name("q").about("quit"))
         .subcommand(
             SubCommand::with_name("exec_func")
                 .about("Sends a request to execute a function defined")
                 .arg(
-                    Arg::with_name("func_name").required(true)
+                    Arg::with_name("func_name")
+                        .required(true)
                         .help("func_id of the function")
                         .number_of_values(1),
                 )
                 .arg(
-                    Arg::with_name("args").required(true)
+                    Arg::with_name("args")
+                        .required(true)
                         .min_values(0)
                         .help("arguments of the function"),
                 ),
@@ -56,11 +57,13 @@ fn main() {
                 .about("Creates new housekeeping report structure")
                 .arg(
                     Arg::with_name("hk_id")
-                        .number_of_values(1).required(true)
+                        .number_of_values(1)
+                        .required(true)
                         .help("housekeeping structure id"),
                 )
                 .arg(
-                    Arg::with_name("param_ids").required(true)
+                    Arg::with_name("param_ids")
+                        .required(true)
                         .min_values(1)
                         .help("parameters that will be reported in this structure"),
                 ),
@@ -69,7 +72,8 @@ fn main() {
             SubCommand::with_name("one_shot")
                 .about("Sends a one shot request for the specified hk id")
                 .arg(
-                    Arg::with_name("hk_ids").required(true)
+                    Arg::with_name("hk_ids")
+                        .required(true)
                         .min_values(1)
                         .help("Housekeeping structure id to be reported"),
                 ),
@@ -78,8 +82,10 @@ fn main() {
             SubCommand::with_name("periodic_en")
                 .about("Enables peridic report of parameters of the given struct ids")
                 .arg(
-                    Arg::with_name("structure_ids").required(true)
-                        .min_values(1).required(true)
+                    Arg::with_name("structure_ids")
+                        .required(true)
+                        .min_values(1)
+                        .required(true)
                         .help("Housekeeping structure id to be configured"),
                 ),
         )
@@ -87,7 +93,8 @@ fn main() {
             SubCommand::with_name("periodic_dis")
                 .about("Disables peridic report of parameters of the given struct ids")
                 .arg(
-                    Arg::with_name("structure_ids").required(true)
+                    Arg::with_name("structure_ids")
+                        .required(true)
                         .min_values(1)
                         .help("Housekeeping structure id to be configured"),
                 ),
@@ -97,10 +104,10 @@ fn main() {
     rl.set_auto_add_history(true);
 
     print!("Please specify device index: ");
-    if list_ports() == 0{
+    if list_ports() == 0 {
         return;
     };
-    let idx:usize;
+    let idx: usize;
     scan!("{}", idx);
     // Etablishing serial connetion
     let s = SerialPortSettings {
@@ -112,8 +119,6 @@ fn main() {
         timeout: Duration::from_millis(100),
     };
 
-    
-
     // Open the first serialport available.
     let mut serialport = open_with_settings(
         &available_ports()
@@ -124,8 +129,6 @@ fn main() {
         &s,
     )
     .expect("Failed to open serial port");
-
-    
 
     //sleep
     let mut clone = serialport.try_clone().expect("Failed to clone");
@@ -172,8 +175,10 @@ fn main() {
                 writeln!(file, "TM pack:\n{:#?}", res_pack).unwrap();
             } else if ser_type == (1, 8) {
                 writeln!(file, "TM FAILURE RESPONSE").unwrap();
-                let res_pack =
-                SpacePacket::<prust_core::sp::tm::TmPacket<services::service_1::Service1_8>>::from_bytes(&buf[0..data_len]).unwrap();
+                let res_pack = SpacePacket::<
+                    prust_core::sp::tm::TmPacket<services::service_1::Service1_8>,
+                >::from_bytes(&buf[0..data_len])
+                .unwrap();
                 let (code, data) = res_pack.get_err();
                 writeln!(file, "TM pack:\n{:#?}", res_pack).unwrap();
                 writeln!(
@@ -184,7 +189,7 @@ fn main() {
                 )
                 .unwrap();
             } else if ser_type == (3, 25) {
-                writeln!(file,"Tm Parameter Response").unwrap();
+                writeln!(file, "Tm Parameter Response").unwrap();
                 let res_pack = SpacePacket::<
                     prust_core::sp::tm::TmPacket<services::service_3::service_3_25::Service3_25>,
                 >::from_bytes(&buf[0..data_len])
@@ -218,29 +223,27 @@ fn main() {
         // std::io::stdin()
         //    .read_line(&mut input)
         //    .expect("Error reading input.");
-        let input = match rl.readline(">> ") 
-         {
+        let input = match rl.readline(">> ") {
             Ok(l) => l,
             Err(ReadlineError::Interrupted) => {
                 println!("CTRL-C");
                 std::process::exit(0x0000)
-            },
+            }
             Err(ReadlineError::Eof) => {
                 println!("CTRL-D");
                 std::process::exit(0x0000)
-            },
+            }
             Err(err) => {
                 println!("Error: {:?}", err);
                 std::process::exit(0x0100)
             }
-
-         };
+        };
         let args: Vec<&str> = input.split_ascii_whitespace().collect();
-        let matc = match app.clone().get_matches_from_safe(args){
-            Ok(m)=> m,
+        let matc = match app.clone().get_matches_from_safe(args) {
+            Ok(m) => m,
             Err(e) => {
-                println!("{}",e.message); 
-                continue
+                println!("{}", e.message);
+                continue;
             }
         };
 
@@ -308,9 +311,7 @@ fn main() {
                     .unwrap()
                     .to_bytes()
             }
-            ("q",_) => {
-                std::process::exit(0x0000)
-            }
+            ("q", _) => std::process::exit(0x0000),
             _ => Vec::new(),
         };
         if mes.len() == 0 {
@@ -320,5 +321,4 @@ fn main() {
         println!("The packet send:\n{:?}", mes);
         serialport.write(mes.as_slice()).unwrap();
     }
-
 }
