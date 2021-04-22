@@ -10,7 +10,7 @@ and
 ```
 prust_test
 ```
-To see how ```cargo run``` works check the wiki page: [How to Use Prust Test](https://github.com/visionspacetec/Prust/wiki/How-to-Use-Prust-Test).
+To see how ```prust_test``` works check the wiki page: [How to Use Prust Test](https://github.com/visionspacetec/Prust/wiki/How-to-Use-Prust-Test).
 
 ## Requirements
 For GNU Linux pkg-config headers are required:
