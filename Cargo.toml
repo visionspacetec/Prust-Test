@@ -1,6 +1,6 @@
 [package]
 name = "prust_test"
-version = "0.1.0"
+version = "0.1.1"
 authors = ["syelman <selman.ozleyen2017@gtu.edu.tr>", "visionspace <info@visionspace.com>"]
 edition = "2018"
 repository = "https://github.com/visionspacetec/Prust-Test"
