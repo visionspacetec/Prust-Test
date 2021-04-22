@@ -1,3 +1,6 @@
+
+[![crates.io](https://img.shields.io/crates/v/prust_test.svg)](https://crates.io/crates/prust_test)
+[![WIKI](https://img.shields.io/badge/wiki-prust-yellow.svg)](https://github.com/visionspacetec/Prust/wiki)
 # Test Tools
 Available commands
 ```
