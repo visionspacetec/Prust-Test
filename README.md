@@ -4,15 +4,15 @@
 # Test Tools
 Available commands
 ```
-cargo run list_ports
+list_ports
 ```
 and 
 ```
-cargo run
+prust_test
 ```
 To see how ```cargo run``` works check the wiki page: [How to Use Prust Test](https://github.com/visionspacetec/Prust/wiki/How-to-Use-Prust-Test).
 
-## Setup
+## Requirements
 For GNU Linux pkg-config headers are required:
 ```
 Ubuntu: sudo apt install pkg-config  
@@ -28,4 +28,8 @@ For windows some build tools will be required (Will be warned by the OS about th
 Nightly rust is required.
 ```
 rustup default nightly  
+```
+## Install
+```
+cargo install prust_test
 ```
