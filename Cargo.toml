@@ -1,9 +1,14 @@
 [package]
 name = "prust_test"
 version = "0.1.0"
-authors = ["syelman <selman.ozleyen2017@gtu.edu.tr>"]
+authors = ["syelman <selman.ozleyen2017@gtu.edu.tr>", "visionspace <info@visionspace.com>"]
 edition = "2018"
+repository = "https://github.com/visionspacetec/Prust-Test"
+readme = "README.md"
+license-file = "LICENSE"
 default-run="prust_test"
+description = "A crate that utilizes prust_core and provides a cli to send/receive the PUS-C tm/tc packets defined on it."
+homepage = "https://github.com/visionspacetec/Prust#readme"
 
 
 
@@ -22,7 +27,7 @@ libudev = "0.2.0"
 [dependencies]
 hashbrown = "0.8.2"
 serialport = {version = "3.3.0"}
-prust_core = {git = "https://github.com/visionspacetec/Prust-Core", branch = "main", package = "prust_core"}
+prust_core = "0.1.1"
 clap = "2.33.3"
 byteorder = {version = "1.3.4",default-features = false}
 rustyline = "6.3.0"
