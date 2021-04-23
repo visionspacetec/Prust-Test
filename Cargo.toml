@@ -1,7 +1,7 @@
 [package]
 name = "prust_test"
-version = "0.1.1"
-authors = ["syelman <selman.ozleyen2017@gtu.edu.tr>", "visionspace <info@visionspace.com>"]
+version = "0.1.2"
+authors = ["syelman <selman.ozleyen2017@gtu.edu.tr>", "selman-vst", "<selman.ozleyen@visionspace.com>"]
 edition = "2018"
 repository = "https://github.com/visionspacetec/Prust-Test"
 readme = "README.md"
